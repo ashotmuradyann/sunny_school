@@ -1,5 +1,5 @@
 import * as http from "node:http";
-import { promises } from "node:fs";
+import { promises as fsPromises } from "node:fs";
 const port = process.env.PORT || 3000;
 
 const app = http.createServer(async (req, res) => {
@@ -25,7 +25,7 @@ async function pageWriter(
     statusCode = 404,
     contentType = "text/html"
 ) {
-    const pageData = await promises.readFile(fileName);
+    const pageData = await fsPromises.readFile(fileName);
     response.writeHead(statusCode, {
         "Content-Type": contentType
     });
