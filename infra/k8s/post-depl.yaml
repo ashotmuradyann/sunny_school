@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: post-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: post
+  template:
+    metadata:
+      labels:
+        app: post
+    spec:
+      containers:
+        - name: post
+          image: multi-author-blog/post
+          env:
+            - name: POST_PORT
+              value: "3004"
+            - name: MONGO_URI
+              value: "mongodb://post-mongo-srv:27017/post"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: post-srv
+spec:
+  selector:
+    app: post
+  ports:
+    - name: post
+      protocol: TCP
+      port: 3004
+      targetPort: 3004

@@ -1,0 +1,36 @@
+apiVersion: skaffold/v2beta11
+kind: Config
+deploy:
+  kubeContext: docker-desktop
+  kubectl:
+    manifests:
+      - ./infra/k8s/*
+build:
+  local:
+    push: false
+  artifacts:
+    - image: multi-author-blog/auth
+      context: auth
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "src/**/*.ts"
+            dest: .
+    - image: multi-author-blog/post
+      context: post
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "src/**/*.ts"
+            dest: .
+portForward:
+  - resourceType: Service
+    resourceName: auth-srv
+    port: 3003
+    localPort: 3003
+  - resourceType: Service
+    resourceName: post-srv
+    port: 3004
+    localPort: 3004
